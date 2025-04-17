@@ -41,13 +41,19 @@
         }
 
         /* 게임판 스타일 */
+        .game-container {
+            margin-top: 70px;  /* 메뉴가 고정되어 있으므로 여백 추가 */
+            padding: 20px;
+        }
+
         .board {
             display: grid;
             grid-template-columns: repeat(15, 30px);
             grid-template-rows: repeat(15, 30px);
             gap: 1px;
             justify-content: center;
-            margin-top: 70px;  /* 메뉴 아래로 여유 공간 추가 */
+            margin-top: 20px;
+            overflow: hidden;
         }
 
         .cell {
@@ -88,7 +94,7 @@
         <a href="#">홈</a>
         <a href="gallery.html">갤러리</a>
         <a href="guestbook.html">방명록</a>
-        <a href="game.html">오목 게임</a>
+        <a href="game.html">게임</a>
     </div>
 
     <!-- 게임판 -->
@@ -112,30 +118,6 @@
                 for (let col = 0; col < boardSize; col++) {
                     const cell = document.createElement('div');
                     cell.classList.add('cell');
-                    cell.dataset.row = row;
-                    cell.dataset.col = col;
-                    cell.addEventListener('click', handleCellClick);
-                    board.appendChild(cell);
-                }
-            }
-        }
 
-        // 셀 클릭 시 처리 함수
-        function handleCellClick(event) {
-            const row = event.target.dataset.row;
-            const col = event.target.dataset.col;
-
-            // 이미 돌이 놓인 자리면 클릭 불가
-            if (gameBoard[row][col] !== null) {
-                return;
-            }
-
-            // 돌을 놓기
-            gameBoard[row][col] = currentPlayer;
-            event.target.classList.add(currentPlayer);
-
-            // 승리 확인
-            if (checkWin(row, col)) {
-                message.textContent = `${currentPlayer === 'black' ? '검은돌' :
 
 
