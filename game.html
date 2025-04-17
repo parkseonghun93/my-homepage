@@ -9,10 +9,35 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
         }
 
         h1 {
             color: #3498db;
+        }
+
+        /* 메뉴 버튼 스타일 */
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #3498db;
+            padding: 10px 0;
+            z-index: 10;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 0 10px;
+        }
+
+        .menu a:hover {
+            background-color: #2980b9;
         }
 
         /* 게임판 스타일 */
@@ -22,7 +47,7 @@
             grid-template-rows: repeat(15, 30px);
             gap: 1px;
             justify-content: center;
-            margin: 20px auto;
+            margin-top: 70px;  /* 메뉴 아래로 여유 공간 추가 */
         }
 
         .cell {
@@ -48,16 +73,30 @@
             margin-top: 20px;
             color: green;
         }
+
+        /* 게임판 외부 여백 */
+        .game-container {
+            padding: 20px;
+            margin-top: 100px;  /* 메뉴와 게임 사이 간격 조정 */
+        }
     </style>
 </head>
 <body>
 
-    <h1>오목 게임</h1>
+    <!-- 메뉴 버튼 -->
+    <div class="menu">
+        <a href="#">홈</a>
+        <a href="gallery.html">갤러리</a>
+        <a href="guestbook.html">방명록</a>
+        <a href="#">오목 게임</a>
+    </div>
 
     <!-- 게임판 -->
-    <div class="board" id="board"></div>
-
-    <p id="message" class="message"></p>
+    <div class="game-container">
+        <h1>오목 게임</h1>
+        <div class="board" id="board"></div>
+        <p id="message" class="message"></p>
+    </div>
 
     <script>
         const boardSize = 15;
@@ -141,4 +180,5 @@
     </script>
 </body>
 </html>
+
 
