@@ -1,211 +1,206 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오목 게임</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <title>오목 게임</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
 
-        h1 {
-            color: #3498db;
-        }
+    /* 메뉴 */
+    .menu {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #3498db;
+      padding: 10px 0;
+      text-align: center;
+      z-index: 100;
+    }
 
-        /* 메뉴 스타일 */
-        .menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #3498db;
-            padding: 10px 0;
-            z-index: 10;
-        }
+    .menu a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      font-size: 18px;
+    }
 
-        .menu a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 18px;
-            margin: 0 10px;
-        }
+    .menu a:hover {
+      background-color: #2980b9;
+    }
 
-        .menu a:hover {
-            background-color: #2980b9;
-        }
+    /* 게임 영역 */
+    .game-container {
+      margin-top: 70px;
+      text-align: center;
+    }
 
-        /* 게임판 스타일 */
-        .game-container {
-            margin-top: 80px;  /* 메뉴가 고정되어 있으므로 여백 추가 */
-            padding: 20px;
-        }
+    canvas {
+      background-color: #f9d88c;
+      border: 2px solid #444;
+      cursor: pointer;
+    }
 
-        .board {
-            display: grid;
-            grid-template-columns: repeat(15, 30px);
-            grid-template-rows: repeat(15, 30px);
-            gap: 1px;
-            justify-content: center;
-            margin-top: 20px;
-            overflow: hidden;
-            background-color: #eee;
-        }
+    .message {
+      font-size: 20px;
+      margin-top: 15px;
+      color: green;
+    }
 
-        .cell {
-            width: 30px;
-            height: 30px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            cursor: pointer;
-            border-radius: 50%;
-        }
+    .reset-button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-        .black {
-            background-color: black;
-        }
-
-        .white {
-            background-color: white;
-            border: 1px solid black;
-        }
-
-        .message {
-            font-size: 24px;
-            margin-top: 20px;
-            color: green;
-        }
-
-        .reset-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-
-        .reset-button:hover {
-            background-color: #2980b9;
-        }
-    </style>
+    .reset-button:hover {
+      background-color: #2980b9;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- 메뉴 버튼 -->
-    <div class="menu">
-        <a href="index.html">홈</a>
-        <a href="gallery.html">갤러리</a>
-        <a href="guestbook.html">방명록</a>
-        <a href="game.html">게임</a>
-    </div>
+  <div class="menu">
+    <a href="index.html">홈</a>
+    <a href="gallery.html">갤러리</a>
+    <a href="guestbook.html">방명록</a>
+    <a href="game.html">게임</a>
+  </div>
 
-    <!-- 게임판 -->
-    <div class="game-container">
-        <h1>오목 게임</h1>
-        <div class="board" id="board"></div>
-        <p id="message" class="message"></p>
-        <button class="reset-button" onclick="resetGame()">게임 초기화</button>
-    </div>
+  <div class="game-container">
+    <h1>오목 게임</h1>
+    <canvas id="gomoku" width="450" height="450"></canvas>
+    <p class="message" id="message"></p>
+    <button class="reset-button" onclick="initGame()">게임 초기화</button>
+  </div>
 
-    <script>
-        const boardSize = 15;
-        const board = document.getElementById('board');
-        const message = document.getElementById('message');
-        let currentPlayer = 'black';  // black: 검은돌, white: 흰돌
-        let gameBoard = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
+  <script>
+    const canvas = document.getElementById('gomoku');
+    const ctx = canvas.getContext('2d');
+    const size = 15;
+    const cellSize = canvas.width / size;
+    const board = Array.from({ length: size }, () => Array(size).fill(null));
+    let currentPlayer = 'black';
+    let gameOver = false;
+    const message = document.getElementById('message');
 
-        // 게임판 생성
-        function createBoard() {
-            for (let row = 0; row < boardSize; row++) {
-                for (let col = 0; col < boardSize; col++) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('cell');
-                    cell.dataset.row = row;
-                    cell.dataset.col = col;
-                    cell.addEventListener('click', handleCellClick);
-                    board.appendChild(cell);
-                }
-            }
+    function drawBoard() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < size; i++) {
+        // 세로선
+        ctx.beginPath();
+        ctx.moveTo(cellSize * i + cellSize / 2, cellSize / 2);
+        ctx.lineTo(cellSize * i + cellSize / 2, canvas.height - cellSize / 2);
+        ctx.stroke();
+
+        // 가로선
+        ctx.beginPath();
+        ctx.moveTo(cellSize / 2, cellSize * i + cellSize / 2);
+        ctx.lineTo(canvas.width - cellSize / 2, cellSize * i + cellSize / 2);
+        ctx.stroke();
+      }
+
+      // 돌 그리기
+      for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
+          if (board[row][col]) {
+            drawStone(row, col, board[row][col]);
+          }
+        }
+      }
+    }
+
+    function drawStone(row, col, color) {
+      const x = col * cellSize + cellSize / 2;
+      const y = row * cellSize + cellSize / 2;
+      const radius = cellSize / 2.5;
+
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = color === 'black' ? 'black' : 'white';
+      ctx.fill();
+      ctx.strokeStyle = 'black';
+      ctx.stroke();
+    }
+
+    function handleClick(event) {
+      if (gameOver) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const col = Math.floor(x / cellSize);
+      const row = Math.floor(y / cellSize);
+
+      if (board[row][col] !== null) return;
+
+      board[row][col] = currentPlayer;
+      drawBoard();
+
+      if (checkWin(row, col, currentPlayer)) {
+        message.textContent = `${currentPlayer === 'black' ? '흑' : '백'}돌이 승리했습니다!`;
+        gameOver = true;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+    }
+
+    function checkWin(row, col, color) {
+      const directions = [
+        [0, 1], [1, 0], [1, 1], [1, -1]
+      ];
+
+      for (let [dx, dy] of directions) {
+        let count = 1;
+
+        // 한쪽 방향
+        for (let i = 1; i < 5; i++) {
+          const r = row + dy * i;
+          const c = col + dx * i;
+          if (r < 0 || c < 0 || r >= size || c >= size || board[r][c] !== color) break;
+          count++;
         }
 
-        // 셀 클릭 시 처리 함수
-        function handleCellClick(event) {
-            const row = event.target.dataset.row;
-            const col = event.target.dataset.col;
-
-            // 이미 돌이 놓인 자리면 클릭 불가
-            if (gameBoard[row][col] !== null) {
-                return;
-            }
-
-            // 돌을 놓기
-            gameBoard[row][col] = currentPlayer;
-            event.target.classList.add(currentPlayer);
-
-            // 승리 확인
-            if (checkWin(row, col)) {
-                message.textContent = `${currentPlayer === 'black' ? '검은돌' : '흰돌'}이 승리했습니다!`;
-                return;
-            }
-
-            // 턴 변경
-            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+        // 반대 방향
+        for (let i = 1; i < 5; i++) {
+          const r = row - dy * i;
+          const c = col - dx * i;
+          if (r < 0 || c < 0 || r >= size || c >= size || board[r][c] !== color) break;
+          count++;
         }
 
-        // 승리 체크
-        function checkWin(row, col) {
-            const directions = [
-                [[0, 1], [0, -1]], // 가로
-                [[1, 0], [-1, 0]], // 세로
-                [[1, 1], [-1, -1]], // 대각선 /
-                [[1, -1], [-1, 1]]  // 대각선 \
-            ];
+        if (count >= 5) return true;
+      }
 
-            for (const direction of directions) {
-                let count = 1;
-                for (const [dx, dy] of direction) {
-                    let x = row;
-                    let y = col;
-                    while (true) {
-                        x += dx;
-                        y += dy;
-                        if (x < 0 || x >= boardSize || y < 0 || y >= boardSize || gameBoard[x][y] !== currentPlayer) {
-                            break;
-                        }
-                        count++;
-                    }
-                }
+      return false;
+    }
 
-                if (count >= 5) {
-                    return true;
-                }
-            }
-            return false;
+    function initGame() {
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          board[i][j] = null;
         }
+      }
+      currentPlayer = 'black';
+      gameOver = false;
+      message.textContent = '';
+      drawBoard();
+    }
 
-        // 게임 초기화
-        function resetGame() {
-            gameBoard = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
-            currentPlayer = 'black';
-            message.textContent = '';
-            const cells = document.querySelectorAll('.cell');
-            cells.forEach(cell => {
-                cell.classList.remove('black', 'white');
-            });
-        }
-
-        // 게임 시작
-        createBoard();
-    </script>
-
+    canvas.addEventListener('click', handleClick);
+    drawBoard();
+  </script>
 </body>
 </html>
 
