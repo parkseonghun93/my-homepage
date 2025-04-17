@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>갤러리</title>
+    <style>
+        body { font-family: Arial; text-align: center; }
+        h1 { color: #3498db; }
+
+        /* 메뉴 스타일 */
+        nav { background-color: #3498db; padding: 10px; text-align: center; }
+        nav a { color: white; text-decoration: none; padding: 10px 20px; margin: 0 10px; border-radius: 5px; }
+        nav a:hover { background-color: #2980b9; }
+
+        /* 갤러리 이미지 스타일 */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3열 그리드 */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gallery-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-container img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 메뉴 버튼 -->
+    <nav>
+        <a href="index.html">홈</a>
+        <a href="guestbook.html">방명록</a>
+        <a href="gallery.html">갤러리</a>
+    </nav>
+
+    <h1>선화의 갤러리</h1>
+
+    <!-- 갤러리 이미지 목록 -->
+    <div class="gallery-container">
+        <img src="pic1.png" alt="사진1">
+        <img src="pic2.png" alt="사진2">
+        <img src="pic3.png" alt="사진3">
+        <img src="pic4.png" alt="사진4">
+        <img src="pic5.png" alt="사진5">
+       
+    </div>
+
+</body>
+</html>
