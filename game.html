@@ -66,11 +66,12 @@
         }
 
         .black {
-            background-color: #000;
+            background-color: black;
         }
 
         .white {
-            background-color: #fff;
+            background-color: white;
+            border: 1px solid #000;
         }
 
         /* 승리 메시지 스타일 */
@@ -91,7 +92,7 @@
 
     <!-- 메뉴 버튼 -->
     <div class="menu">
-        <a href="#">홈</a>
+        <a href="index.html">홈</a>
         <a href="gallery.html">갤러리</a>
         <a href="guestbook.html">방명록</a>
         <a href="game.html">게임</a>
@@ -118,6 +119,75 @@
                 for (let col = 0; col < boardSize; col++) {
                     const cell = document.createElement('div');
                     cell.classList.add('cell');
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.addEventListener('click', handleCellClick);
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        // 셀 클릭 시 처리 함수
+        function handleCellClick(event) {
+            const row = event.target.dataset.row;
+            const col = event.target.dataset.col;
+
+            // 이미 돌이 놓인 자리면 클릭 불가
+            if (gameBoard[row][col] !== null) {
+                return;
+            }
+
+            // 돌을 놓기
+            gameBoard[row][col] = currentPlayer;
+            event.target.classList.add(currentPlayer);
+
+            // 승리 확인
+            if (checkWin(row, col)) {
+                message.textContent = `${currentPlayer === 'black' ? '검은돌' : '흰돌'}이 승리했습니다!`;
+                return;
+            }
+
+            // 턴 변경
+            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+        }
+
+        // 승리 체크
+        function checkWin(row, col) {
+            const directions = [
+                [[0, 1], [0, -1]], // 가로
+                [[1, 0], [-1, 0]], // 세로
+                [[1, 1], [-1, -1]], // 대각선 /
+                [[1, -1], [-1, 1]]  // 대각선 \
+            ];
+
+            for (const direction of directions) {
+                let count = 1;
+                for (const [dx, dy] of direction) {
+                    let x = row;
+                    let y = col;
+                    while (true) {
+                        x += dx;
+                        y += dy;
+                        if (x < 0 || x >= boardSize || y < 0 || y >= boardSize || gameBoard[x][y] !== currentPlayer) {
+                            break;
+                        }
+                        count++;
+                    }
+                }
+
+                if (count >= 5) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // 게임 시작
+        createBoard();
+    </script>
+</body>
+</html>
+
 
 
 
