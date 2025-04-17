@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오목 게임</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        /* 게임판 스타일 */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(15, 30px);
+            grid-template-rows: repeat(15, 30px);
+            gap: 1px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .black {
+            background-color: #000;
+        }
+
+        .white {
+            background-color: #fff;
+        }
+
+        /* 승리 메시지 스타일 */
+        .message {
+            font-size: 24px;
+            margin-top: 20px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>오목 게임</h1>
+
+    <!-- 게임판 -->
+    <div class="board" id="board"></div>
+
+    <p id="message" class="message"></p>
+
+    <script>
+        const boardSize = 15;
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+
+        let currentPlayer = 'black';  // black: 검은돌, white: 흰돌
+        const gameBoard = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
+
+        // 게임판 생성
+        function createBoard() {
+            for (let row = 0; row < boardSize; row++) {
+                for (let col = 0; col < boardSize; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.addEventListener('click', handleCellClick);
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        // 셀 클릭 시 처리 함수
+        function handleCellClick(event) {
+            const row = event.target.dataset.row;
+            const col = event.target.dataset.col;
+
+            // 이미 돌이 놓인 자리면 클릭 불가
+            if (gameBoard[row][col] !== null) {
+                return;
+            }
+
+            // 돌을 놓기
+            gameBoard[row][col] = currentPlayer;
+            event.target.classList.add(currentPlayer);
+
+            // 승리 확인
+            if (checkWin(row, col)) {
+                message.textContent = `${currentPlayer === 'black' ? '검은돌' : '흰돌'}이 승리했습니다!`;
+                return;
+            }
+
+            // 턴 변경
+            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+        }
+
+        // 승리 체크
+        function checkWin(row, col) {
+            const directions = [
+                [[0, 1], [0, -1]], // 가로
+                [[1, 0], [-1, 0]], // 세로
+                [[1, 1], [-1, -1]], // 대각선 /
+                [[1, -1], [-1, 1]]  // 대각선 \
+            ];
+
+            for (const direction of directions) {
+                let count = 1;
+                for (const [dx, dy] of direction) {
+                    let x = row;
+                    let y = col;
+                    while (true) {
+                        x += dx;
+                        y += dy;
+                        if (x < 0 || x >= boardSize || y < 0 || y >= boardSize || gameBoard[x][y] !== currentPlayer) {
+                            break;
+                        }
+                        count++;
+                    }
+                }
+
+                if (count >= 5) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // 게임 시작
+        createBoard();
+    </script>
+</body>
+</html>
