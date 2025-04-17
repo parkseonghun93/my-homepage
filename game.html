@@ -17,7 +17,7 @@
             color: #3498db;
         }
 
-        /* 메뉴 버튼 스타일 */
+        /* 메뉴 스타일 */
         .menu {
             position: fixed;
             top: 0;
@@ -42,7 +42,7 @@
 
         /* 게임판 스타일 */
         .game-container {
-            margin-top: 70px;  /* 메뉴가 고정되어 있으므로 여백 추가 */
+            margin-top: 80px;  /* 메뉴가 고정되어 있으므로 여백 추가 */
             padding: 20px;
         }
 
@@ -54,15 +54,16 @@
             justify-content: center;
             margin-top: 20px;
             overflow: hidden;
+            background-color: #eee;
         }
 
         .cell {
             width: 30px;
             height: 30px;
             border: 1px solid #ccc;
-            border-radius: 50%;
             background-color: #fff;
             cursor: pointer;
+            border-radius: 50%;
         }
 
         .black {
@@ -71,20 +72,28 @@
 
         .white {
             background-color: white;
-            border: 1px solid #000;
+            border: 1px solid black;
         }
 
-        /* 승리 메시지 스타일 */
         .message {
             font-size: 24px;
             margin-top: 20px;
             color: green;
         }
 
-        /* 게임판 외부 여백 */
-        .game-container {
-            padding: 20px;
-            margin-top: 100px;  /* 메뉴와 게임 사이 간격 조정 */
+        .reset-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .reset-button:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
@@ -103,15 +112,15 @@
         <h1>오목 게임</h1>
         <div class="board" id="board"></div>
         <p id="message" class="message"></p>
+        <button class="reset-button" onclick="resetGame()">게임 초기화</button>
     </div>
 
     <script>
         const boardSize = 15;
         const board = document.getElementById('board');
         const message = document.getElementById('message');
-
         let currentPlayer = 'black';  // black: 검은돌, white: 흰돌
-        const gameBoard = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
+        let gameBoard = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
 
         // 게임판 생성
         function createBoard() {
@@ -182,10 +191,21 @@
             return false;
         }
 
+        // 게임 초기화
+        function resetGame() {
+            gameBoard = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
+            currentPlayer = 'black';
+            message.textContent = '';
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.classList.remove('black', 'white');
+            });
+        }
+
         // 게임 시작
         createBoard();
     </script>
+
 </body>
 </html>
-
 
