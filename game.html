@@ -88,8 +88,7 @@
         <a href="#">홈</a>
         <a href="gallery.html">갤러리</a>
         <a href="guestbook.html">방명록</a>
-        <a href="game.html">게임</a>
-    
+        <a href="game.html">오목 게임</a>
     </div>
 
     <!-- 게임판 -->
@@ -137,49 +136,6 @@
 
             // 승리 확인
             if (checkWin(row, col)) {
-                message.textContent = `${currentPlayer === 'black' ? '검은돌' : '흰돌'}이 승리했습니다!`;
-                return;
-            }
-
-            // 턴 변경
-            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
-        }
-
-        // 승리 체크
-        function checkWin(row, col) {
-            const directions = [
-                [[0, 1], [0, -1]], // 가로
-                [[1, 0], [-1, 0]], // 세로
-                [[1, 1], [-1, -1]], // 대각선 /
-                [[1, -1], [-1, 1]]  // 대각선 \
-            ];
-
-            for (const direction of directions) {
-                let count = 1;
-                for (const [dx, dy] of direction) {
-                    let x = row;
-                    let y = col;
-                    while (true) {
-                        x += dx;
-                        y += dy;
-                        if (x < 0 || x >= boardSize || y < 0 || y >= boardSize || gameBoard[x][y] !== currentPlayer) {
-                            break;
-                        }
-                        count++;
-                    }
-                }
-
-                if (count >= 5) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        // 게임 시작
-        createBoard();
-    </script>
-</body>
-</html>
+                message.textContent = `${currentPlayer === 'black' ? '검은돌' :
 
 
