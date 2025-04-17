@@ -26,70 +26,9 @@
     <img src="pic1.png" alt="사진1" width="300">
     <img src="pic2.png" alt="사진2" width="300">
     
-    <h2>방명록</h2>
+    <p>이곳은 선화의 일상 페이지입니다. 방명록을 작성하려면 메뉴에서 방명록을 클릭해주세요!</p>
 
-    <!-- 방명록 입력 폼 -->
-    <form id="guestbookForm">
-        <label for="name">이름:</label>
-        <input type="text" id="name" required><br><br>
-        <label for="message">메시지:</label><br>
-        <textarea id="message" rows="4" cols="50" required></textarea><br><br>
-        <button type="submit">방명록 남기기</button>
-    </form>
-
-    <!-- 방명록 리스트 -->
-    <div id="guestbook">
-        <h3>방명록</h3>
-    </div>
-
-    <script>
-        // 방명록 데이터를 저장할 배열
-        const guestbookEntries = JSON.parse(localStorage.getItem('guestbookEntries')) || [];
-
-        // 방명록 데이터를 화면에 표시하는 함수
-        function displayGuestbook() {
-            const guestbookDiv = document.getElementById('guestbook');
-            guestbookDiv.innerHTML = '<h3>방명록</h3>'; // 기존 내용을 초기화
-
-            guestbookEntries.forEach(entry => {
-                const entryDiv = document.createElement('div');
-                entryDiv.classList.add('entry');
-                entryDiv.innerHTML = `<strong>${entry.name}</strong><p>${entry.message}</p>`;
-                guestbookDiv.appendChild(entryDiv);
-            });
-        }
-
-        // 페이지 로드 시 방명록 표시
-        displayGuestbook();
-
-        // 폼 제출 이벤트 처리
-        document.getElementById('guestbookForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // 페이지 리로드 방지
-
-            // 입력값 가져오기
-            const name = document.getElementById('name').value;
-            const message = document.getElementById('message').value;
-
-            // 방명록에 추가할 데이터
-            const entry = {
-                name: name,
-                message: message
-            };
-
-            // 방명록 리스트에 추가
-            guestbookEntries.push(entry);
-
-            // localStorage에 저장
-            localStorage.setItem('guestbookEntries', JSON.stringify(guestbookEntries));
-
-            // 폼 초기화
-            document.getElementById('name').value = '';
-            document.getElementById('message').value = '';
-
-            // 방명록을 화면에 다시 표시
-            displayGuestbook();
-        });
-    </script>
 </body>
 </html>
+
 
